@@ -1,0 +1,12 @@
+.App {
+  text-align: center;
+}
+
+.App ul {
+  list-style: none;
+}
+
+.App ul li {
+  margin: 1%;
+  border-top: 2px gray solid;
+}
