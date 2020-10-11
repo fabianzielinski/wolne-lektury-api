@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import ButtonList from  './ButtonList'
 import ListAudio from  './ListAudio'
+import FormSearch from  './FormSearch'
 
 const API = "https://wolnelektury.pl/api/";
 
@@ -9,7 +10,8 @@ const API = "https://wolnelektury.pl/api/";
 class App extends Component {
   state = { 
     audiobooks:[], 
-    list: ''
+    list: '',
+    searchText: ''
   }
 
   handleClickAudioBooks = () => {
@@ -33,7 +35,8 @@ class App extends Component {
   handleClickClear = ()=> {
     this.setState({
       audiobooks:[],
-      list: ''
+      list: '',
+      searchText: ''
     })
   }
 
@@ -50,10 +53,20 @@ class App extends Component {
         .then((data) => {
           // const a = data.results;
           this.setState(() => ({
-            audiobooks: data
+            audiobooks: data  
           }));
         })
         .catch((error) => console.log(error));
+  }
+
+  handleChangeSearch = (e) => {
+    const searchText = e.target.value.toLowerCase();
+    const audiobooks = [...this.state.audiobooks].filter(item => item.author.toLowerCase().includes(searchText)|| item.title.toLowerCase().includes(searchText))
+    
+    this.setState({
+      audiobooks:audiobooks,
+      searchText
+    })
   }
 
   render() { 
@@ -61,6 +74,7 @@ class App extends Component {
     <ButtonList click={this.handleClickAudioBooks} bTitle={"Lista Audioboków"}/>
     <ButtonList click={this.handleClickClear} bTitle={"Czyszczenie Listy"}/>
     <ButtonList click={this.handleClickBooks} bTitle={"Lista Książek"}/>
+    <FormSearch change={this.handleChangeSearch} serchText={this.state.searchText}/>
     <ListAudio audiobooks={this.state.audiobooks} list={this.state.list}/>
   </div> );
   }
