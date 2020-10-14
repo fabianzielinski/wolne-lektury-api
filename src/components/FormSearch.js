@@ -3,7 +3,7 @@ import React from 'react';
 const FormSearch = (props) => {
     return ( 
     <form action="">
-        <label>Szukaj : 
+        <label htmlFor="serch">Szukaj : 
             <input
                 name="search"
                 type="text" 

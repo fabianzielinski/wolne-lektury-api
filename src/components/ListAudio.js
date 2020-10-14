@@ -2,17 +2,17 @@ import React from 'react';
 
 const ListAudio = (props) => {
 
-const audiobooks = props.audiobooks.map(audiobook => (
+const itemList = props.itemList.map(item => (
     <li key={props.full_sort_key}>
-        {/* <img src={audiobook.cover_thumb} alt="cover"/> */}
-        <h3>{audiobook.author}</h3>
-        <a href={audiobook.url} target="_blank" rel="noopener noreferrer"><h2>{audiobook.title}</h2></a>
+        {/* <img src={item.cover_thumb} alt="cover"/> */}
+        <h3>{item.author}</h3>
+        <a href={item.url} target="_blank" rel="noopener noreferrer"><h2>{item.title}</h2></a>
     </li>
 ))
     return ( 
     <ul>
-        <h1>Znaleziono : {props.audiobooks.length} {props.list}</h1>
-        {audiobooks}
+        <h1>Znaleziono : {props.itemList.length} {props.list}</h1>
+        {itemList !== null ? itemList : <p>Ładuje ...</p>}
     </ul>);
 }
  

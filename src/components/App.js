@@ -4,69 +4,81 @@ import ButtonList from  './ButtonList'
 import ListAudio from  './ListAudio'
 import FormSearch from  './FormSearch'
 
-const API = "https://wolnelektury.pl/api/";
+// const API = "https://wolnelektury.pl/api/";
+const APIAudioBooks = "https://wolnelektury.pl/api/audiobooks";
+const APIBooks = "https://wolnelektury.pl/api/books";
 
 
 class App extends Component {
   state = { 
     audiobooks:[], 
+    books:[],
+    itemList:[],
     list: '',
     searchText: ''
   }
 
   handleClickAudioBooks = () => {
-    const api = API+"audiobooks";
-    // console.log(api);
-    this.handleDataFetch(api)
+    // const api = API+"audiobooks";
+    // this.handleDataFetch(api)
     this.setState({
+      itemList:this.state.audiobooks,
       list: "audiobooków"
     })
   }
 
   handleClickBooks = () => {
-    const api = API+"books";
-    // console.log(api);
-    this.handleDataFetch(api)
+    // const api = API+"books";
+    // this.handleDataFetch(api)
     this.setState({
+      itemList: this.state.books,
       list: "książek"
     })
   }
 
   handleClickClear = ()=> {
     this.setState({
-      audiobooks:[],
+      itemList: [],
       list: '',
       searchText: ''
     })
   }
 
-  handleDataFetch = (api) => {
+  handleDataFetch = (api, part) => {
     fetch(api)
         .then((response) => {
           if (response.ok) {
-            // console.log(response);
             return response;
           }
           throw Error("Błąd!!!");
         })
         .then((response) => response.json())
         .then((data) => {
-          // const a = data.results;
-          this.setState(() => ({
-            audiobooks: data  
-          }));
-        })
+          if(part === "audiobooks") {
+              this.setState(() => ({
+                audiobooks: data  
+              }));
+          }else{
+              this.setState(() => ({
+                books: data  
+              }));
+        }})
         .catch((error) => console.log(error));
   }
 
   handleChangeSearch = (e) => {
     const searchText = e.target.value.toLowerCase();
-    const audiobooks = [...this.state.audiobooks].filter(item => item.author.toLowerCase().includes(searchText)|| item.title.toLowerCase().includes(searchText))
+    const itemList = [...this.state.itemList].filter(item => item.author.toLowerCase().includes(searchText)|| item.title.toLowerCase().includes(searchText))
     
     this.setState({
-      audiobooks:audiobooks,
+      itemList: itemList,
       searchText
     })
+  }
+
+  componentDidMount() {
+    this.handleDataFetch(APIAudioBooks, "audiobooks");
+    this.handleDataFetch(APIBooks, "books");
   }
 
   render() { 
@@ -75,7 +87,7 @@ class App extends Component {
     <ButtonList click={this.handleClickClear} bTitle={"Czyszczenie Listy"}/>
     <ButtonList click={this.handleClickBooks} bTitle={"Lista Książek"}/>
     <FormSearch change={this.handleChangeSearch} serchText={this.state.searchText}/>
-    <ListAudio audiobooks={this.state.audiobooks} list={this.state.list}/>
+    <ListAudio itemList={this.state.itemList} list={this.state.list}/>
   </div> );
   }
 }
